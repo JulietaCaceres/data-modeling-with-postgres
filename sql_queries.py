@@ -14,11 +14,11 @@ songplay_table_create = ("""CREATE TABLE IF NOT EXISTS songplays(songplay_id SER
 user_table_create = ("""CREATE TABLE IF NOT EXISTS users(user_id INT PRIMARY KEY, first_name text, last_name text, gender text, level text)
 """)
 
-song_table_create = ("""CREATE TABLE IF NOT EXISTS songs(song_id text, title text, artist_id text, year INT, duration FLOAT
+song_table_create = ("""CREATE TABLE IF NOT EXISTS songs(song_id text PRIMARY KEY, title text, artist_id text, year INT, duration FLOAT
 )
 """)
 
-artist_table_create = ("""CREATE TABLE IF NOT EXISTS artists(artist_id text, name text, location text, latitude NUMERIC(6,2), longitude NUMERIC(6,2))
+artist_table_create = ("""CREATE TABLE IF NOT EXISTS artists(artist_id text PRIMARY KEY, name text, location text, latitude NUMERIC(6,2), longitude NUMERIC(6,2))
 """)
 
 time_table_create = ("""CREATE TABLE IF NOT EXISTS time(start_time TIMESTAMP, hour INT, day text, week INT, month text, year INT, weekday text)
