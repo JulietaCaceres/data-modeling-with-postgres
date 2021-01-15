@@ -1,9 +1,11 @@
 # Data Modeling with Postgres
+Project for Data Engineering Nanodegree program at Udacity.
+
 
 ## Objective
-This project is a ETL pipeline which takes information from json about users and their interactions on tje web page "Sparkify". 
-Sparkify is a simulated web of music, and the json files contain information about song, interactions user-page, and artists.
-The goal is take information from files and populate it into fact and dimension tables for a star schema for a particular analytic focus.
+This project is an ETL pipeline which takes information from json files about users and their interactions on the web page "Sparkify". 
+Sparkify is a simulated web of music, and the json files contain information about songs, interactions user-page, and artists.
+The goal is to take information from files and populate this data into fact and dimension tables for a star schema for a particular analytic focus.
 
 ## Data base schema
 - Fact Table
