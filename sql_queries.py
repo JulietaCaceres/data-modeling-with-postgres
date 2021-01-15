@@ -72,7 +72,10 @@ INSERT INTO songs (song_id, title, artist_id, year, duration)
     ON CONFLICT DO NOTHING
 """)
 
-artist_table_insert = ("""INSERT INTO artists (artist_id, name, location, latitude, longitude) VALUES (%s, %s, %s, %s,%s) 
+artist_table_insert = ("""
+INSERT INTO artists (artist_id, name, location, latitude, longitude)
+VALUES (%s, %s, %s, %s,%s) 
+ON CONFLICT DO NOTHING
 """)
 
 time_table_insert = 'INSERT INTO time VALUES %s'

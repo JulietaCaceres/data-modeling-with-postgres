@@ -29,6 +29,7 @@ The sttar schema created using this script will be:
 import os
 import glob
 import psycopg2
+import psycopg2.extras
 import pandas as pd
 from sql_queries import *
 
@@ -57,8 +58,47 @@ def process_song_file(cur, filepath):
     artist_data = df[['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']].values[0].tolist()
     cur.execute(artist_table_insert, artist_data)
 
+    
+def select_song_and_artist_id(cur, song, artist, length):
+    """
+    Extract song_id and artist_id from song and artist tables.
+    
+    Parameters
+    ----------
+    cur : str
+        Cursor of the database connection.
+    song: str
+        Name of the song in songs table
+    artist: str
+        Name of the artist in artists table
+    length:
+        Duration of the song
+    
+    Returns
+    -------
+    song_id, artist_id
+        song and artis id from tables. None in case of not marching results.
+    """
+    # get songid and artistid from song and artist tables
+    cur.execute(song_select, (song, artist, length))
+    results = cur.fetchone()
+    if results:
+        return results[0], results[1]
+    else:
+        return None, None
 
 def process_log_file(cur, filepath):
+    """
+    Insert data from a json file into time, user and songplay tables.
+
+    Parameters
+    ----------
+    cur : str
+        Cursor of the database connection.
+    filepath : str
+        Path of the song json file to process
+    """    
+
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -74,34 +114,56 @@ def process_log_file(cur, filepath):
     column_labels = ['timestamp', 'hour', 'day', 'week', 'month', 'year', 'weekday']
     time_df = pd.DataFrame(dict(zip(column_labels, time_data)))
 
-    for i, row in time_df.iterrows():
-        cur.execute(time_table_insert, list(row))
-
+    psycopg2.extras.execute_values(cur, time_table_insert, ((
+            time['timestamp'],
+            time['hour'],
+            time['day'],
+            time['week'],
+            time['month'],
+            time['year'],
+            time['weekday']
+            ) for index, time in time_df.iterrows()), page_size=100 )
+        
     # load user table
     user_df = df[["userId", 'firstName', 'lastName', 'gender', 'level']]
 
-    # insert user records
-    for i, row in user_df.iterrows():
-        cur.execute(user_table_insert, row)
 
-    # insert songplay records
-    for index, row in df.iterrows():
-        
-        # get songid and artistid from song and artist tables
-        cur.execute(song_select, (row.song, row.artist, row.length))
-        results = cur.fetchone()
-        
-        if results:
-            songid, artistid = results
-        else:
-            songid, artistid = None, None
+    # insert user records        
+    psycopg2.extras.execute_values(cur, user_table_insert, ((
+        user["userId"],
+        user['firstName'],
+        user['lastName'],
+        user['gender'],
+        user['level']
+    ) for index, user in user_df.iterrows()), page_size=100)
 
-        # insert songplay record
-        songplay_data = (row.ts, row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
-        cur.execute(songplay_table_insert, songplay_data)
-
+    # insert songplay records 
+    psycopg2.extras.execute_values(cur,songplay_table_insert, ((
+        row['ts'],
+        row['userId'],
+        row['level'],
+        select_song_and_artist_id(cur, row.song, row.artist, row.length)[0],
+        select_song_and_artist_id(cur, row.song, row.artist, row.length)[1],
+        row['sessionId'],
+        row['location'],
+        row['userAgent']
+    )for index, row in df.iterrows()), page_size=100 )
 
 def process_data(cur, conn, filepath, func):
+    """
+    Iterate over the files and process the data to insert them into tables.
+    
+    Parameters
+    ----------
+    cur : str
+        Cursor of the database connection.
+    conn: str
+        Connection to the database
+    filepath : str
+        Path of the song json file to process
+    func:
+        Function used to process the json file according to the information.
+    """ 
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
