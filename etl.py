@@ -31,7 +31,8 @@ import glob
 import psycopg2
 import psycopg2.extras
 import pandas as pd
-from sql_queries import *
+from databaseUtils.sql_queries import *
+import numpy as np
 
 
 def process_song_file(cur, filepath):
@@ -108,9 +109,11 @@ def process_log_file(cur, filepath):
     # convert timestamp column to datetime
     t = pd.to_datetime(df['ts'],unit='ms')
 
+    psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
+
     
     # insert time data records
-    time_data = [t, t.dt.hour, t.dt.day,  t.dt.week,  t.dt.month,  t.dt.year,  t.dt.weekday]
+    time_data = [df.ts, t.dt.hour, t.dt.day,  t.dt.week,  t.dt.month,  t.dt.year,  t.dt.weekday]
     column_labels = ['timestamp', 'hour', 'day', 'week', 'month', 'year', 'weekday']
     time_df = pd.DataFrame(dict(zip(column_labels, time_data)))
 

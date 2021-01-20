@@ -32,9 +32,11 @@ The goal is to take information from files and populate this data into fact and 
 ## Run
 
 ### Requirements
+
 The following libraries should be installed:
 - psycopg2
 - pandas
+
 ### Running
 
 In order to run the project you should:
