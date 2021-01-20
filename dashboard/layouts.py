@@ -1,7 +1,6 @@
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
-from components import Header, print_button
 from datetime import datetime as dt
 from datetime import date, timedelta
 import pandas as pd
@@ -91,14 +90,6 @@ layout_sparkify_report = html.Div(style={'backgroundColor': colors['background']
         figure=main_users_bar
     )    
 ])
-
-######################## 404 Page ########################
-noPage = html.Div([ 
-    # CC Header
-    Header(),
-    html.P(["404 Page not found"])
-    ], className="no-page")
-
 
 
 
