@@ -11,6 +11,9 @@ import pandas as pd
 import io
 import xlsxwriter
 from flask import send_file
+from data_fetcher import *
+
+data_fetcher = DataFetcher()
 
 # see https://dash.plot.ly/external-resources to alter header, footer and favicon
 app.index_string = ''' 
@@ -49,24 +52,58 @@ def display_page(pathname):
     else:
         return noPage
 
-# # # # # # # # #
-# detail the way that external_css and external_js work and link to alternative method locally hosted
-# # # # # # # # #
-external_css = ["https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css",
-                "https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css",
-                "//fonts.googleapis.com/css?family=Raleway:400,300,600",
-                "https://codepen.io/bcd/pen/KQrXdb.css",
-                "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
-                "https://codepen.io/dmcomfort/pen/JzdzEZ.css"]
+@app.callback(
+    Output('plays_over_the_time', 'figure'),
+    Input('unit-time', 'value'))
+def update_time_figure(selected_time):
 
-#for css in external_css:
- #   app.css.append_css({"external_url": css})
+    times_df = data_fetcher.time_most_used(selected_time)
+    
+    fig = px.line(times_df, x=selected_time, y="times_played", line_shape="spline", render_mode="svg")
 
-external_js = ["https://code.jquery.com/jquery-3.2.1.min.js",
-               "https://codepen.io/bcd/pen/YaXojL.js"]
+    fig.update_layout(
+    plot_bgcolor=colors['background'],
+    paper_bgcolor=colors['background'],
+    font_color=colors['text']
+    )
 
-#for js in external_js:
- #   app.scripts.append_script({"external_url": js})
+    return fig
+
+
+@app.callback(
+    Output('locations-graph', 'figure'),
+    Input('n-locations', 'value'))
+def update_n_location_graph(n_ranking):
+
+    main_locations = data_fetcher.main_locations(n_ranking)
+    
+    fig = px.bar(data_frame=main_locations, x="location", y="times_played", color='times_played')
+
+    fig.update_layout(
+    plot_bgcolor=colors['background'],
+    paper_bgcolor=colors['background'],
+    font_color=colors['text']
+    )
+
+    return fig
+
+
+@app.callback(
+    Output('top_users', 'figure'),
+    Input('n-users', 'value'))
+def update_n_users_graph(n_ranking):
+
+    main_users = data_fetcher.main_users(n_ranking)
+    
+    fig = px.bar(data_frame=main_users, x="last_name", y="times_played", color='times_played')
+
+    fig.update_layout(
+    plot_bgcolor=colors['background'],
+    paper_bgcolor=colors['background'],
+    font_color=colors['text']
+    )
+
+    return fig
 
 if __name__ == '__main__':
     app.run_server(debug=True)

@@ -105,6 +105,34 @@ class DataFetcher:
         cur.execute(query)
         return pd.DataFrame(cur.fetchall(), columns=['times_played', 'location'])
 
+    def main_locations_by_year(self, n_top=5, year=2018):
+        """
+        Execute a query to sonplays table to obtain the locations most frequently use the plataform.
+        
+        Parameters
+        ---------
+        n_top: int, limit of the rancking to be desplayed.
+       
+        Returns
+        -------
+        DataFrame[times_played, location]: 
+            return a data frame with the times that a song is played and the location where was played
+        """
+        cur = self.conn.cursor()
+        query = f"WITH data_by_year AS (SELECT start_time " \
+                        f"FROM time " \
+                        f"WHERE year = {year}) " \
+                f"SELECT COUNT(*) AS times_played, location " \
+                f"FROM songplays " \
+                f"JOIN data_by_year " \
+                f"USING(start_time) " \
+               f"GROUP BY location " \
+               f"ORDER BY times_played DESC " \
+               f"LIMIT {n_top}"
+                                  
+        cur.execute(query)
+        return pd.DataFrame(cur.fetchall(), columns=['times_played', 'location'])
+
     def main_users(self, n_top=5):
         """
         Execute a query to sonplays table to obtain the users who most frequently use the plataform.
@@ -123,6 +151,34 @@ class DataFetcher:
                f"FROM ((( " \
                     f"SELECT COUNT(*) AS times_played, user_id " \
                     f"FROM songplays " \
+                    f"GROUP BY user_id) AS t1" \
+                    f"LEFT JOIN users " \
+                    f"USING(user_id))) AS t2 " \
+               f"ORDER BY times_played DESC " \
+               f"LIMIT {n_top}"
+                  
+        cur.execute(query)
+        return pd.DataFrame(cur.fetchall(), columns=['times_played', 'user_id', 'first_name', 'last_name'])
+
+    def main_users_by_year(self, n_top=5, year=2018):
+        """
+        Execute a query to sonplays table to obtain the users who most frequently use the plataform.
+        
+        Parameters
+        ---------
+        n_top: int, limit of the rancking to be desplayed.
+       
+        Returns
+        -------
+        DataFrame[times_played, user]: 
+            return a data frame with the times that the users use the plataform
+        """
+        cur = self.conn.cursor()
+        query= f"SELECT times_played, user_id, first_name, last_name " \
+               f"FROM ((( " \
+                    f"SELECT COUNT(*) AS times_played, user_id " \
+                    f"FROM songplays " \
+                    f"WHERE year = {year} " \
                     f"GROUP BY user_id) AS t1" \
                     f"LEFT JOIN users " \
                     f"USING(user_id))) AS t2 " \
@@ -153,4 +209,26 @@ class DataFetcher:
                   
         cur.execute(query)
         return pd.DataFrame(cur.fetchall(), columns=['times_played', 'hour'])
+        
+    def time_most_used(self, time_selected):
+        """
+        Execute a query to sonplays table to obtain the hours with more traffic of users.
+       
+        Returns
+        -------
+        DataFrame[times_played, hour]: 
+            return a data frame with the times that the users use the plataform
+        """
+        cur = self.conn.cursor()
+        query= f"SELECT COUNT(*) AS times_played, {time_selected} " \
+                f"FROM( " \
+                    f"SELECT songplay_id, t.{time_selected} " \
+                    f"FROM songplays " \
+                    f"LEFT JOIN time as t " \
+                    f"USING(start_time)) AS t1 " \
+                f"GROUP BY t1.{time_selected} " \
+                f"ORDER BY {time_selected}"
+                  
+        cur.execute(query)
+        return pd.DataFrame(cur.fetchall(), columns=['times_played', time_selected])
         
