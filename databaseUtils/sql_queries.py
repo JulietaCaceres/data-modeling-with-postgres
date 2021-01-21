@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS artists(
 
 time_table_create = ("""
 CREATE TABLE IF NOT EXISTS time(
-    start_time TIMESTAMP, 
+    start_time BIGINT PRIMARY KEY, 
     hour INT, 
     day text, 
     week INT, 
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS time(
 
 song_table_insert = ("""
 INSERT INTO songs (song_id, title, artist_id, year, duration)
-    VALUES(%s, %s, %s, %s,%s)
+    VALUES (%s, %s, %s, %s,%s)
     ON CONFLICT DO NOTHING
 """)
 
@@ -78,7 +78,7 @@ VALUES (%s, %s, %s, %s,%s)
 ON CONFLICT DO NOTHING
 """)
 
-time_table_insert = 'INSERT INTO time VALUES %s'
+time_table_insert = 'INSERT INTO time VALUES %s ON CONFLICT DO NOTHING'
 
 user_table_insert = 'INSERT INTO users VALUES %s ON CONFLICT DO NOTHING'
 
