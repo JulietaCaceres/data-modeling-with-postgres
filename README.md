@@ -23,14 +23,14 @@ The goal is to take information from files and populate this data into fact and 
         
 ## Project structure
 - /Data : Contains the json files whit the data to be populated
--/databaseUtils: Contains the following python scripts:
+- /databaseUtils: Contains the following python scripts:
     - sql_queries.py: Contains the queries to create a drop tables, and the insert queries to store the data from jsons.
     - create_tables.py: Contains the logic to drop and create the tables used.
--/notebooks: Contian the notebooks with the test:
+- /notebooks: Contian the notebooks with the test:
     - test.ipynb: Contains queries to validate the creation of the tables.
     - etl.ipynb: Contains the first approach to insert data. It iterates over the data frame and insert the data once by time .
     - etl-with-execute-values: Contains the final approach to insert data using the function 'execute_values' in order to reduce the number of round trips to the database server
--/dashboard: Contains the scripts used to generate a dashboard:
+- /dashboard: Contains the scripts used to generate a dashboard:
     - app.py: Initialize the Dash application.
     - data_fetcher.py: Contain the queries used to extract the data from the database to use it in the dashboard.
     - index.py: Contains the logic to update the graph because of interaction.
