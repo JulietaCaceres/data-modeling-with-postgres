@@ -46,7 +46,10 @@ The goal is to take information from files and populate this data into fact and 
 The following libraries should be installed:
 - psycopg2
 - pandas
-- Dash 
+- dash
+- dash-core-components
+- plotly-express 
+
 
 ### Running
 
