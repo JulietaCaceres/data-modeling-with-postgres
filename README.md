@@ -3,11 +3,22 @@ Project for Data Engineering Nanodegree program at Udacity.
 
 
 ## Objective
-This project is an ETL pipeline which takes information from json files about users and their interactions on the web site "Sparkify". 
-Sparkify is a simulated web of music, and the json files contain information about songs, interactions user-page, and artists.
-The goal is to take information from files and populate this data into fact and dimension tables for a star schema for a particular analytic focus.
+This project is an ETL pipeline which takes information from json files, process the data and populate them into a database schema.
+
+The json files are:
+**log_data:** Contain information about users and their interactions on the web site "Sparkify". 
+The structure of the json is as follow:
+![alt text](https://github.com/JulietaCaceres/data-modeling-with-postgres/blob/main/img/log-data.png?raw=true)  
+
+Sparkify is a simulated web of music.
+
+**song_data:** Contain information about songs and artist.
+![alt text](https://github.com/JulietaCaceres/data-modeling-with-postgres/blob/main/img/song-data.png?raw=true) 
+
+This data is processed and stored in the database in a star schema for a particular analytic focus.
 
 ## Data base schema
+
 - Fact Table
     - songplays: Records in log data associated with song plays i.e. records with page NextSong
       (songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
@@ -39,7 +50,18 @@ The goal is to take information from files and populate this data into fact and 
     - layouts.py: Contains the components to show in the dashboard.
 - etl.py: Contains the transformationes needed to populate the information and insert the data in the database.
 
+## Dashboard
 
+Running the dashboard is possible take some insights from the data.
+You can view the top 5 of locations which have more interaction with the application. The n top can change as you prefer.
+![alt text](https://github.com/JulietaCaceres/data-modeling-with-postgres/blob/main/img/top-5-locations.png?raw=true)      
+        
+Also, you can view the traffic on the page over the time, you are able to select the unit of yime (hour, month, year)
+![alt text](https://github.com/JulietaCaceres/data-modeling-with-postgres/blob/main/img/trafic_over_the_time.png?raw=true)      
+        
+Finally you can view the top 5 users who most use the app.
+![alt text](https://github.com/JulietaCaceres/data-modeling-with-postgres/blob/main/img/top-5-users.png?raw=true)      
+        
 
 ## Run
 
@@ -48,7 +70,8 @@ The goal is to take information from files and populate this data into fact and 
 The following libraries should be installed:
 - psycopg2
 - pandas
-- Dash 
+- Dash
+
 
 ### Running
 
