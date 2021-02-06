@@ -12,7 +12,8 @@ The structure of the json is as follow:
 
 Sparkify is a simulated web of music.
 
-**song_data:** Contain information about songs and artist.
+**song_data:** Contain information about songs and artist.  
+
 ![alt text](https://github.com/JulietaCaceres/data-modeling-with-postgres/blob/main/img/song-data.png?raw=true) 
 
 This data is processed and stored in the database in a star schema for a particular analytic focus.
@@ -57,7 +58,7 @@ You can view the top 5 of locations which have more interaction with the applica
 ![alt text](https://github.com/JulietaCaceres/data-modeling-with-postgres/blob/main/img/top-5-locations.png?raw=true)      
         
 Also, you can view the traffic on the page over the time, you are able to select the unit of yime (hour, month, year)
-![alt text](https://github.com/JulietaCaceres/data-modeling-with-postgres/blob/main/img/trafic_over_the_time.png?raw=true)      
+![alt text](https://github.com/JulietaCaceres/data-modeling-with-postgres/blob/main/img/traffic_over_the_time.png?raw=true)      
         
 Finally you can view the top 5 users who most use the app.
 ![alt text](https://github.com/JulietaCaceres/data-modeling-with-postgres/blob/main/img/top-5-users.png?raw=true)      
