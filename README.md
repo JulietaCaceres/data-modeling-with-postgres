@@ -20,6 +20,8 @@ The goal is to take information from files and populate this data into fact and 
         (artist_id, name, location, latitude, longitude)
     - time: timestamps of records in songplays broken down into specific units
         (start_time, hour, day, week, month, year, weekday)
+
+![alt text] https://github.com/JulietaCaceres/data-modeling-with-postgres/blob/main/img/tables.png        
         
 ## Project structure
 - /Data : Contains the json files whit the data to be populated
