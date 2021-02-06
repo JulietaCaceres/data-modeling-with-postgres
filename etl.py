@@ -130,15 +130,22 @@ def process_log_file(cur, filepath):
     # load user table
     user_df = df[["userId", 'firstName', 'lastName', 'gender', 'level']]
 
+    for index, user in user_df.iterrows():
+        cur.execute(user_table_insert, (
+                    user["userId"],
+                    user['firstName'],
+                    user['lastName'],
+                    user['gender'],
+                    user['level']))
 
     # insert user records        
-    psycopg2.extras.execute_values(cur, user_table_insert, ((
-        user["userId"],
-        user['firstName'],
-        user['lastName'],
-        user['gender'],
-        user['level']
-    ) for index, user in user_df.iterrows()), page_size=100)
+    #psycopg2.extras.execute_values(cur, user_table_insert, ((
+     #   user["userId"],
+      #  user['firstName'],
+       # user['lastName'],
+        #user['gender'],
+        #user['level']
+    #) for index, user in user_df.iterrows()), page_size=100)
 
     # insert songplay records 
     psycopg2.extras.execute_values(cur,songplay_table_insert, ((
